@@ -1,24 +1,48 @@
-import { useState } from 'react';
-import { Button } from 'react-daisyui';
+import axios from 'axios';
+import React, { useState } from 'react';
+// import { Button, Input } from 'react-daisyui';
 
 function App() {
-  const [message, setMessage] = useState('');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
 
-  const fetchMessage = async () => {
-    const res = await fetch('/api/message');
-    const text = await res.text();
-    setMessage(text);
+  const [days, setDays] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post('/api/days', { from, to });
+
+      console.log(res.data);
+      if (res.data) setDays(res.data.days);
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log('form data: ', from, to);
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-      <Button color="primary" onClick={fetchMessage}>
-        Get Welcome Message
-      </Button>
-      {message && <div className="text-lg font-bold">{message}</div>}
+      <form onSubmit={handleSubmit}>
+        <input
+          name="from"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+        />
+        <br />
+        <input name="to" value={to} onChange={(e) => setTo(e.target.value)} />
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+      </form>
+      <br />
+      <br />
+      <br />
+      <div>Days Difference: {days}</div>
     </div>
   );
 }
 
 export default App;
-
