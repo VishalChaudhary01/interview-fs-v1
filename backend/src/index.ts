@@ -11,9 +11,10 @@ app.get('/api/message', (_req, res) => {
 app.post('/api/days', (req: Request, res: Response) => {
   const { from, to } = req.body;
 
-  const remanigTimes = new Date(to).getTime() - new Date(from).getTime();
+  const differenceInDays =
+    (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24);
 
-  res.status(201).json({ days: remanigTimes });
+  res.status(201).json({ days: differenceInDays });
 });
 
 app.listen(PORT, () => {
